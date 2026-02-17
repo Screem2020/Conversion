@@ -4,4 +4,7 @@ public class ConvertingFileException  extends RuntimeException {
     public ConvertingFileException(String message, Throwable cause) {
         super(message, cause);
     }
+    public ConvertingFileException(String message) {
+        super(message);
+    }
 }
