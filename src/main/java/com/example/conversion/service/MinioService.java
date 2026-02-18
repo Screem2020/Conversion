@@ -4,9 +4,10 @@ import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 
+@Service
 public class MinioService {
     @Value("${minio.endpoint}")
     private String endpoint;
