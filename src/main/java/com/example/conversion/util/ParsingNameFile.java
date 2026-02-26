@@ -1,4 +1,4 @@
-package com.example.conversion.uril;
+package com.example.conversion.util;
 
 import java.util.UUID;
 
@@ -11,7 +11,6 @@ public class ParsingNameFile {
             return DEFAULT_NAME;
         }
         int indexPoint = originalFileName.lastIndexOf('.');
-
         if (indexPoint <= 0) {
             return DEFAULT_NAME;
         }

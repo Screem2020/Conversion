@@ -2,7 +2,7 @@ package com.example.conversion.service;
 
 import com.example.conversion.exceptions.ConvertingFileException;
 import com.example.conversion.exceptions.NotFoundFileException;
-import com.example.conversion.uril.ParsingNameFile;
+import com.example.conversion.util.ParsingNameFile;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
