@@ -1,5 +1,5 @@
 minio:
-  endpoint: http://localhost:9000
+  endpoint: http://minio:9000
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: pdf-files
@@ -7,3 +7,13 @@ minio:
 spring:
   application:
     name: conversion
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: conversion-groupo
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer

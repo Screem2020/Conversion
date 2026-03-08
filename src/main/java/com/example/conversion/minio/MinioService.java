@@ -1,11 +1,13 @@
-package com.example.conversion.service;
+package com.example.conversion.minio;
 
 import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 @Service
 public class MinioService {
@@ -49,9 +51,22 @@ public class MinioService {
                 throw new ConvertingFileException("Error saving file to Minio");
             }
 
-        } catch  (Exception e) {
+        } catch (Exception e) {
             throw new ConvertingFileException("Could not create bucket" + e);
         }
         return pdfByte;
+    }
+
+    public InputStream getPdf(String filename) {
+        try {
+            return minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(filename)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Could not get object from Minio" + filename, e);
+        }
     }
 }

@@ -2,11 +2,11 @@ package com.example.conversion.service;
 
 import com.example.conversion.exceptions.ConvertingFileException;
 import com.example.conversion.exceptions.NotFoundFileException;
+import com.example.conversion.minio.MinioService;
 import com.example.conversion.util.ParsingNameFile;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,21 +18,20 @@ public class ConversionService {
     private final MinioService minioService;
 
 
-    public byte[] covertFile(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        String extension = ParsingNameFile.getExtension(originalFilename);
+    public byte[] covertFile(byte[] bytes, String fileName) {
+        String extension = ParsingNameFile.getExtension(fileName);
         byte[] convertPdfFile = converters.stream()
                 .filter(convert -> convert.supports(extension))
                 .map(convert -> {
                     try {
-                        return convert.convert(file);
+                        return convert.convert(bytes);
                     } catch (Exception e) {
-                        throw new ConvertingFileException(originalFilename, e);
+                        throw new ConvertingFileException(fileName, e);
                     }
                 })
                 .findFirst()
                 .orElseThrow(() -> new NotFoundFileException("File not supported"));
-        String convertPdfFileWithUuid = ParsingNameFile.generateNameFileUuid(file.getOriginalFilename(), extension);
+        String convertPdfFileWithUuid = ParsingNameFile.generateNameFileUuid(fileName, extension);
         return minioService.savePdf(convertPdfFile, convertPdfFileWithUuid);
     }
 }

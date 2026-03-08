@@ -1,7 +1,10 @@
 package com.example.conversion.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
+@Component
 public class ParsingNameFile {
 
     public static String DEFAULT_NAME = "file";
