@@ -12,7 +12,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class Consumer {
+public class ConsumerEvent {
     private final ConversionService covertService;
     private final MinioService minioService;
 
@@ -22,10 +22,9 @@ public class Consumer {
             System.out.println("Listening file: " + fileName);
             InputStream isPdf = minioService.getPdf(fileName.getFileName());
             byte[] fileBytes = isPdf.readAllBytes();
-            byte[] convertPdf = covertService.covertFile(fileBytes, fileName.getFileName());
-            minioService.savePdf(convertPdf, fileName.getFileName());
+            covertService.covertFile(fileBytes, fileName.getFileName());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Error processing file: {}", fileName.getFileName(), e);
         }
     }
 }

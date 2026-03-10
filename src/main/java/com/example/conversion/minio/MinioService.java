@@ -3,12 +3,14 @@ package com.example.conversion.minio;
 import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+@Slf4j
 @Service
 public class MinioService {
     @Value("${minio.endpoint}")
@@ -22,39 +24,51 @@ public class MinioService {
 
     private MinioClient minioClient;
 
+
     @PostConstruct
     public void init() {
         minioClient = MinioClient.builder()
                 .endpoint(endpoint)
                 .credentials(accessKey, secretKey)
                 .build();
+//        try {
+//            boolean bucketExists = minioClient.bucketExists(
+//                    BucketExistsArgs
+//                            .builder()
+//                            .bucket(bucketName)
+//                            .build());
+//            if (!bucketExists) {
+//                minioClient.makeBucket(
+//                        MakeBucketArgs
+//                                .builder()
+//                                .bucket(bucketName)
+//                                .build()
+//                );
+//                log.info("Bucket created: {}", bucketName);
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error initialization Minio bucket", e);
+//        }
     }
 
-    public byte[] savePdf(byte[] pdfByte, String filename) {
+    public void savePdf(byte[] pdfByte, String filename) {
         try {
-            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
-                minioClient.makeBucket(MakeBucketArgs.builder()
-                        .bucket(bucketName)
-                        .build());
-            }
 
-            PutObjectArgs buildObjectArgs = PutObjectArgs.builder()
-                    .object(filename)
-                    .bucket(bucketName)
-                    .stream(new ByteArrayInputStream(pdfByte), pdfByte.length, -1)
-                    .contentType("application/pdf")
-                    .build();
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .object(filename)
+                            .bucket(bucketName)
+                            .stream(new ByteArrayInputStream(pdfByte), pdfByte.length, -1)
+                            .contentType("application/pdf")
+                            .build()
+            );
+            log.info("File save to Minio: {}", filename);
 
-            try {
-                minioClient.putObject(buildObjectArgs);
-            } catch (Exception e) {
-                throw new ConvertingFileException("Error saving file to Minio");
-            }
 
         } catch (Exception e) {
-            throw new ConvertingFileException("Could not create bucket" + e);
+            log.error("Error saving file to Minio:{}",  filename, e);
+            throw  new ConvertingFileException("Error saving file to Minio", e);
         }
-        return pdfByte;
     }
 
     public InputStream getPdf(String filename) {

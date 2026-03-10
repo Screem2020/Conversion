@@ -1,6 +1,20 @@
-version: '3.8'
-
 services:
+  app:
+    build: .
+    container_name: conversion-app
+    depends_on:
+      - kafka
+      - postgres
+    networks:
+      - kafka-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: POSTGRES
+      SPRING_DATASOURCE_PASSWORD: 12345
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: localhost:9092
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
 
   postgres:
     image: postgres:16
@@ -17,10 +31,6 @@ services:
   kafka:
     image: apache/kafka:4.1.1
     container_name: kafka
-    ports:
-      - "9092:9092"
-    volumes:
-      - kafka-data:/var/lib/kafka/data
     networks:
       - kafka-net
     environment:
@@ -32,25 +42,12 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       ALLOW_PLAINTEXT_LISTENER: "yes"
-
-  kafka-rest:
-    image: confluentinc/cp-kafka-rest:7.5.0
-    container_name: kafka-rest
-    depends_on:
-      - kafka
     ports:
-      - "8082:8082"
-    environment:
-      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
-    networks:
-      - kafka-net
-    restart: unless-stopped
-
-volumes:
-  postgres-data:
-  kafka-data:
+      - "9092:9092"
 
 networks:
   kafka-net:
     driver: bridge
+
+volumes:
+  postgres-data:
