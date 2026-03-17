@@ -18,7 +18,7 @@ public class ConversionService {
     private final MinioService minioService;
 
 
-    public void covertFile(byte[] bytes, String fileName) {
+    public String covertFile(byte[] bytes, String fileName) {
         String extension = ParsingNameFile.getExtension(fileName);
         byte[] convertPdfFile = converters.stream()
                 .filter(convert -> convert.supports(extension))
@@ -33,6 +33,7 @@ public class ConversionService {
                 .orElseThrow(() -> new NotFoundFileException("File not supported"));
         String convertPdfFileWithUuid = ParsingNameFile.generateNameFileUuid(fileName, extension);
         minioService.savePdf(convertPdfFile, convertPdfFileWithUuid);
+        return  convertPdfFileWithUuid;
     }
 }
 

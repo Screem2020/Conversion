@@ -83,4 +83,7 @@ public class MinioService {
             throw new RuntimeException("Could not get object from Minio" + filename, e);
         }
     }
+    public String getFilePath(String fileId) {
+        return bucketName + "/" + fileId;
+    }
 }

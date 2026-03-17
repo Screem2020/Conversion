@@ -2,6 +2,7 @@ package com.example.conversion.controller;
 
 import com.example.conversion.dto.FileUpdateEvent;
 import com.example.conversion.kafka.ProducerEvent;
+import com.example.conversion.minio.MinioService;
 import com.example.conversion.service.ConversionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ public class ControllerConvert {
     private final ConversionService conversionService;
     private final ProducerEvent producerEvent;
     private final String topic = "files-update-topic";
+    private final MinioService minioService;
 
     @PostMapping("/convert/v1/")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -25,8 +27,9 @@ public class ControllerConvert {
         try {
             byte[] bytes = file.getBytes();
             String originalFilename = file.getOriginalFilename();
-            conversionService.covertFile(bytes, originalFilename);
-            producerEvent.sendFileUpdateEvent(topic, new FileUpdateEvent(originalFilename, "uploaded"));
+            String fileId = conversionService.covertFile(bytes, originalFilename);
+            String filePath = minioService.getFilePath(originalFilename);
+            producerEvent.sendFileUpdateEvent(topic, new FileUpdateEvent(fileId, originalFilename, "uploaded", filePath));
             return  ResponseEntity.ok("File uploaded successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
