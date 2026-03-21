@@ -1,9 +1,12 @@
 package com.example.conversion.util;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.UUID;
 
+@RequiredArgsConstructor
+@Data
 @Component
 public class ParsingNameFile {
 

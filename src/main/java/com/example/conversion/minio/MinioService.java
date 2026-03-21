@@ -51,7 +51,7 @@ public class MinioService {
 //        }
     }
 
-    public void savePdf(byte[] pdfByte, String filename) {
+    public void saveFile(byte[] pdfByte, String filename, String content) {
         try {
 
             minioClient.putObject(
@@ -59,7 +59,7 @@ public class MinioService {
                             .object(filename)
                             .bucket(bucketName)
                             .stream(new ByteArrayInputStream(pdfByte), pdfByte.length, -1)
-                            .contentType("application/pdf")
+                            .contentType(content)
                             .build()
             );
             log.info("File save to Minio: {}", filename);
@@ -71,7 +71,7 @@ public class MinioService {
         }
     }
 
-    public InputStream getPdf(String filename) {
+    public InputStream getFile(String filename) {
         try {
             return minioClient.getObject(
                     GetObjectArgs.builder()
