@@ -1,6 +1,6 @@
-package com.example.conversion.service;
+package com.example.conversion.conventer.pdf;
 
-public interface FileToPdfConverter {
+public interface PdfConverter {
     boolean supports(String extension);
     byte[] convert(byte[] fileByte);
 

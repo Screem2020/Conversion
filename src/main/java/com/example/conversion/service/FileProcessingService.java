@@ -1,27 +1,26 @@
-package com.example.conversion.kafka;
+package com.example.conversion.service;
 
+import com.example.conversion.conventer.pdf.ConversionService;
 import com.example.conversion.dto.FileUpdateEvent;
 import com.example.conversion.dto.FileUploadEvent;
+import com.example.conversion.kafka.ProducerEvent;
 import com.example.conversion.minio.MinioService;
-import com.example.conversion.service.ConversionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import java.io.InputStream;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class ConsumerEvent {
+public class FileProcessingService {
     private final ConversionService convertService;
     private final MinioService minioService;
     private final ProducerEvent producerEvent;
-    @Value("${kafka.topics.file-update}")
+    @Value("${spring.kafka.topics.file-update}")
     private String fileUpdateTopic;
 
-    @KafkaListener(topics = "${kafka.topics.file-upload}")
     public void listenFile(FileUploadEvent event) {
         try{
             InputStream file = minioService.getFile(event.getFileName());
@@ -33,7 +32,6 @@ public class ConsumerEvent {
             FileUpdateEvent update = new FileUpdateEvent(
                     event.getFileId(),
                     event.getFileName(),
-                    "CONVERTED",
                     filePath
             );
             producerEvent.sendFileUpdateEvent(fileUpdateTopic, update);
@@ -43,7 +41,6 @@ public class ConsumerEvent {
             FileUpdateEvent failed = new FileUpdateEvent(
                     event.getFileId(),
                     event.getFileName(),
-                    "FAILED",
                     null
             );
             producerEvent.sendFileUpdateEvent(fileUpdateTopic, failed);

@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class FileUpdateEvent {
     private String fileId;
     private String fileName;
-    private String status;
     private String resultPath;
 }

@@ -2,54 +2,22 @@ package com.example.conversion.minio;
 
 import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
-import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MinioService {
-    @Value("${minio.endpoint}")
-    private String endpoint;
-    @Value("${minio.access-key}")
-    private String accessKey;
-    @Value("${minio.secret-key}")
-    private String secretKey;
     @Value("${minio.bucket-name}")
     private String bucketName;
-
-    private MinioClient minioClient;
-
-
-    @PostConstruct
-    public void init() {
-        minioClient = MinioClient.builder()
-                .endpoint(endpoint)
-                .credentials(accessKey, secretKey)
-                .build();
-//        try {
-//            boolean bucketExists = minioClient.bucketExists(
-//                    BucketExistsArgs
-//                            .builder()
-//                            .bucket(bucketName)
-//                            .build());
-//            if (!bucketExists) {
-//                minioClient.makeBucket(
-//                        MakeBucketArgs
-//                                .builder()
-//                                .bucket(bucketName)
-//                                .build()
-//                );
-//                log.info("Bucket created: {}", bucketName);
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error initialization Minio bucket", e);
-//        }
-    }
+    @Value("${minio.endpoint}")
+    private String endpoint;
+    private final MinioClient minioClient;
 
     public void saveFile(byte[] pdfByte, String filename, String content) {
         try {
@@ -84,6 +52,6 @@ public class MinioService {
         }
     }
     public String getFilePath(String fileId) {
-        return bucketName + "/" + fileId;
+        return endpoint + "/" + bucketName + "/" + fileId;
     }
 }

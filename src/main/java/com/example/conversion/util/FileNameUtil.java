@@ -2,13 +2,11 @@ package com.example.conversion.util;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Data
-@Component
-public class ParsingNameFile {
+public class FileNameUtil {
 
     public static String DEFAULT_NAME = "file";
 
