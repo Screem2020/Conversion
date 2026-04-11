@@ -11,7 +11,7 @@ public class ProducerEvent {
     private final KafkaTemplate<String, FileUpdateEvent> kafkaTemplate;
 
     public void sendFileUpdateEvent(String topic, FileUpdateEvent fileName) {
-        kafkaTemplate.send(topic, fileName);
+        kafkaTemplate.send(topic, fileName.getFileId(), fileName);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.conversion.minio;
 
+import com.example.conversion.dto.ConversionResultDTO;
 import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class MinioService {
     private String endpoint;
     private final MinioClient minioClient;
 
-    public void saveFile(byte[] pdfByte, String filename, String content) {
+    public void saveFile(ConversionResultDTO pdfByte, String filename, String content) {
         try {
 
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .object(filename)
                             .bucket(bucketName)
-                            .stream(new ByteArrayInputStream(pdfByte), pdfByte.length, -1)
+                            .stream(new ByteArrayInputStream(pdfByte.getBytes()), pdfByte.getBytes().length, -1)
                             .contentType(content)
                             .build()
             );

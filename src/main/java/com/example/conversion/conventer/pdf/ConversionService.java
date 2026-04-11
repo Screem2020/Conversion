@@ -1,5 +1,7 @@
 package com.example.conversion.conventer.pdf;
 
+import com.example.conversion.conventer.ConverterFile;
+import com.example.conversion.dto.ConversionResultDTO;
 import com.example.conversion.exceptions.NotConvertingException;
 import com.example.conversion.minio.MinioService;
 import com.example.conversion.util.FileNameUtil;
@@ -12,18 +14,18 @@ import java.util.List;
 @Service
 @Data
 public class ConversionService {
-    private final List<PdfConverter> converters;
+    private final List<ConverterFile> converters;
     private final MinioService minioService;
 
     public String covertFile(byte[] bytes, String fileName) {
         String extension = FileNameUtil.getExtension(fileName);
-        byte[] convert = converters.stream()
+        ConversionResultDTO result = converters.stream()
                 .filter(converting -> converting.supports(extension))
                 .findFirst()
-                .orElseThrow(() -> new NotConvertingException("No convert for " + extension))
-                .convert(bytes);
-        String pdfFileId = FileNameUtil.generateNameFileUuid(fileName, "pdf");
-        minioService.saveFile(convert, pdfFileId, "application/pdf");
+                .orElseThrow(() -> new NotConvertingException("No result for " + extension))
+                .convert(bytes,  fileName);
+        String pdfFileId = FileNameUtil.generateNameFileUuid(fileName, result.getExtension());
+        minioService.saveFile(result, pdfFileId, result.getContentType());
         return pdfFileId;
     }
 }

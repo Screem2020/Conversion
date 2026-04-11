@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class FileUploadEvent {
-
     private String fileId;
     private String fileName;
     private String storageLocation;
