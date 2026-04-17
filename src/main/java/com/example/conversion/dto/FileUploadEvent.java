@@ -11,4 +11,5 @@ public class FileUploadEvent {
     private String fileId;
     private String fileName;
     private String storageLocation;
+    private String targetExtension;
 }

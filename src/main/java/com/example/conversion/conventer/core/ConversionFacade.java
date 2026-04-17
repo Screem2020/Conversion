@@ -1,10 +1,11 @@
-package com.example.conversion.conventer.pdf;
+package com.example.conversion.conventer.core;
 
 import com.example.conversion.conventer.ConverterFile;
 import com.example.conversion.dto.ConversionResultDTO;
 import com.example.conversion.exceptions.NotConvertingException;
 import com.example.conversion.minio.MinioService;
 import com.example.conversion.util.FileNameUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Data
-public class ConversionService {
+public class ConversionFacade {
     private final List<ConverterFile> converters;
     private final MinioService minioService;
 

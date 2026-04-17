@@ -1,6 +1,6 @@
 package com.example.conversion.service;
 
-import com.example.conversion.conventer.pdf.ConversionService;
+import com.example.conversion.conventer.core.ConversionFacade;
 import com.example.conversion.dto.FileUpdateEvent;
 import com.example.conversion.dto.FileUploadEvent;
 import com.example.conversion.kafka.ProducerEvent;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 @Service
 @Slf4j
 public class FileProcessingService {
-    private final ConversionService convertService;
+    private final ConversionFacade convertService;
     private final MinioService minioService;
     private final ProducerEvent producerEvent;
     @Value("${spring.kafka.topics.file-update}")
@@ -26,8 +26,8 @@ public class FileProcessingService {
             InputStream file = minioService.getFile(event.getFileName());
             byte[] bytes = file.readAllBytes();
 
-            String pdfFileId = convertService.covertFile(bytes, event.getFileName());
-            String filePath = minioService.getFilePath(pdfFileId);
+            String convertedFileId = convertService.covertFile(bytes, event.getFileName());
+            String filePath = minioService.getFilePath(convertedFileId);
 
             FileUpdateEvent update = new FileUpdateEvent(
                     event.getFileId(),
