@@ -3,11 +3,10 @@ package com.example.conversion.conventer;
 import com.example.conversion.dto.ConversionResultDTO;
 import com.example.conversion.util.ExtensionNameCorrection;
 import org.springframework.stereotype.Component;
-
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class ConverterToTxt implements ConverterFile {
+public class ConverterTxt implements FileConverter {
     @Override
     public boolean supports(String extension) {
         return extension.equalsIgnoreCase("txt") ;

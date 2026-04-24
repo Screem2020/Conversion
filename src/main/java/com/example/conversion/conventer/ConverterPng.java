@@ -1,6 +1,8 @@
 package com.example.conversion.conventer;
 
 import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.exceptions.FileNotFoundException;
+import com.example.conversion.exceptions.PngConvertException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import org.springframework.stereotype.Component;
 
@@ -10,21 +12,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 @Component
-public class ConverterToPdf implements ConverterFile {
-
+public class ConverterPng implements FileConverter {
     @Override
     public boolean supports(String extension) {
-        return extension.equals("pdf");
+        return extension.equals("png");
     }
 
     @Override
     public ConversionResultDTO convert(byte[] fileByte, String fileName) {
-        try{
-            ByteArrayInputStream bais = new ByteArrayInputStream(fileByte);
-            BufferedImage image = ImageIO.read(bais);
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(fileByte);
+            BufferedImage image = ImageIO.read(bis);
 
             if (image == null) {
-                throw new RuntimeException("File is not a vaild PNG file");
+                throw new FileNotFoundException("Invalid PNG file");
             }
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -35,11 +36,11 @@ public class ConverterToPdf implements ConverterFile {
             return new ConversionResultDTO(
                     byteArray,
                     ExtensionNameCorrection.replaceExtension(fileName, "png"),
-                    "image/png",
-                    "png"
+                    "png",
+                    "png/plain"
             );
-        } catch (Exception e) {
-            throw new RuntimeException("PNG conversion failed", e);
+        }catch (Exception e){
+            throw new PngConvertException("JPG conversion failed", e);
         }
     }
 }

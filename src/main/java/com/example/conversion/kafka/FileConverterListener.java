@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ConsumerListener {
+public class FileConverterListener {
     private final FileProcessingService fileProcessingService;
 
     @KafkaListener(topics = "${spring.kafka.topics.file-upload}")

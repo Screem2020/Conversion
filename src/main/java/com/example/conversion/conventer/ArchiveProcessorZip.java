@@ -2,10 +2,12 @@ package com.example.conversion.conventer;
 
 import com.example.conversion.conventer.core.ConversionDispatcher;
 import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.exceptions.ZipConverterException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import com.example.conversion.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.ZipEntry;
@@ -14,7 +16,7 @@ import java.util.zip.ZipOutputStream;
 
 @Component
 @RequiredArgsConstructor
-public class ArchiveProcessorToZip implements ConverterFile {
+public class ArchiveProcessorZip implements FileConverter {
     private final ConversionDispatcher dispatcher;
 
 
@@ -48,14 +50,14 @@ public class ArchiveProcessorToZip implements ConverterFile {
                 zipOutputStream.closeEntry();
 
             }
-            return  new ConversionResultDTO(
+            return new ConversionResultDTO(
                     outputStream.toByteArray(),
                     ExtensionNameCorrection.replaceExtension(fileName, "zip"),
                     "application/zip",
                     "zip"
             );
         } catch (Exception e) {
-            throw new RuntimeException("ZIP conversion failed for file " + fileName, e);
+            throw new ZipConverterException("ZIP conversion failed for file " + fileName, e);
         }
     }
 }
