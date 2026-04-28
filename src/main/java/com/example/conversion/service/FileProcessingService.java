@@ -9,24 +9,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.InputStream;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class FileProcessingService {
-    private final ConversionFacade convertService;
+    private final ConversionFacade conversionFacade;
     private final MinioService minioService;
     private final ProducerEvent producerEvent;
     @Value("${spring.kafka.topics.file-update}")
     private String fileUpdateTopic;
 
-    public void listenFile(FileUploadEvent event) {
+    public void process(FileUploadEvent event) {
         try{
             InputStream file = minioService.getFile(event.getFileName());
             byte[] bytes = file.readAllBytes();
 
-            String convertedFileId = convertService.covertFile(bytes, event.getFileName());
+            String convertedFileId = conversionFacade.covertFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
 
             FileUpdateEvent update = new FileUpdateEvent(
