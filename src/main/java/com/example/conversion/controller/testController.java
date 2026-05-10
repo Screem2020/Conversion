@@ -1,7 +1,6 @@
 package com.example.conversion.controller;
 
 import com.example.conversion.conventer.core.ConversionFacade;
-import com.example.conversion.dto.FileUploadEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

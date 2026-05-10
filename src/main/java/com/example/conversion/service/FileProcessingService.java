@@ -1,8 +1,8 @@
 package com.example.conversion.service;
 
 import com.example.conversion.conventer.core.ConversionFacade;
-import com.example.conversion.dto.FileUpdateEvent;
-import com.example.conversion.dto.FileUploadEvent;
+import com.example.conversion.dto.FileUpdateEventDTO;
+import com.example.conversion.dto.FileUploadEventDTO;
 import com.example.conversion.kafka.ProducerEvent;
 import com.example.conversion.minio.MinioService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class FileProcessingService {
     @Value("${spring.kafka.topics.file-update}")
     private String fileUpdateTopic;
 
-    public void process(FileUploadEvent event) {
+    public void process(FileUploadEventDTO event) {
         try{
             InputStream file = minioService.getFile(event.getFileName());
             byte[] bytes = file.readAllBytes();
@@ -31,7 +31,7 @@ public class FileProcessingService {
             String convertedFileId = conversionFacade.covertFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
 
-            FileUpdateEvent update = new FileUpdateEvent(
+            FileUpdateEventDTO update = new FileUpdateEventDTO(
                     event.getFileId(),
                     event.getFileName(),
                     filePath
@@ -40,7 +40,7 @@ public class FileProcessingService {
 
         } catch (Exception e){
             log.error("Error while listening for file update", e);
-            FileUpdateEvent failed = new FileUpdateEvent(
+            FileUpdateEventDTO failed = new FileUpdateEventDTO(
                     event.getFileId(),
                     event.getFileName(),
                     null

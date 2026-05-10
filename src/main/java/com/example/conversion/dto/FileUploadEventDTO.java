@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class FileUpdateEvent {
+public class FileUploadEventDTO {
     private String fileId;
     private String fileName;
-    private String resultPath;
+    private String storageLocation;
+    private String targetExtension;
 }

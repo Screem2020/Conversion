@@ -1,4 +1,4 @@
-package com.example.conversion.dto;
+package com.example.conversion.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

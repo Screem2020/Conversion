@@ -1,7 +1,7 @@
 package com.example.conversion.kafka;
 
-import com.example.conversion.dto.FileUploadEvent;
-import com.example.conversion.dto.InboxMessage;
+import com.example.conversion.dto.FileUploadEventDTO;
+import com.example.conversion.entity.InboxMessage;
 import com.example.conversion.repository.InboxRepository;
 import com.example.conversion.service.FileProcessingService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class FileConverterProcess {
     private final FileProcessingService fileProcessingService;
 
     @KafkaListener(topics = "${spring.kafka.topics.file-upload}")
-    public void processFile(FileUploadEvent event) {
+    public void processFile(FileUploadEventDTO event) {
         log.info("Received file upload event: {}", event);
         boolean alreadyProcessed = inboxRepository.existsByEventId(event.getFileId());
         if (alreadyProcessed) {

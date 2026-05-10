@@ -1,6 +1,6 @@
 package com.example.conversion.repository;
 
-import com.example.conversion.dto.InboxMessage;
+import com.example.conversion.entity.InboxMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
