@@ -6,7 +6,17 @@ minio:
 
 spring:
   application:
-    name: conversion
+    name: mydb
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: POSTGRES
+    password: 12345
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
   kafka:
     topics:
       file-update: file-update-topic

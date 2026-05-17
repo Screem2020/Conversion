@@ -10,9 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/convert")
-public class testController {
+public class TestController {
     private final ConversionFacade conversionFacade;
     @Value("${spring.kafka.topics.file-upload}")
+    private String topicName;
 
     @PostMapping
     public ResponseEntity<String> convert(@RequestParam("file") MultipartFile file){
@@ -20,7 +21,7 @@ public class testController {
         try {
             String fileId = conversionFacade.covertFile(
                     file.getBytes(),
-                    file.getName()
+                    file.getOriginalFilename()
             );
             return ResponseEntity.ok(fileId);
 

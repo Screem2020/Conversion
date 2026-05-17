@@ -5,7 +5,6 @@ import com.example.conversion.exceptions.FileNotFoundException;
 import com.example.conversion.exceptions.PngConvertException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import org.springframework.stereotype.Component;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
