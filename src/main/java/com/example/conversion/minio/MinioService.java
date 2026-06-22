@@ -22,7 +22,6 @@ public class MinioService {
 
     public void saveFile(ConversionResultDTO pdfByte, String filename, String content) {
         try {
-
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .object(filename)
@@ -32,8 +31,6 @@ public class MinioService {
                             .build()
             );
             log.info("File save to Minio: {}", filename);
-
-
         } catch (Exception e) {
             log.error("Error saving file to Minio:{}",  filename, e);
             throw  new ConvertingFileException("Error saving file to Minio", e);
