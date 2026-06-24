@@ -1,13 +1,13 @@
 package com.example.conversion.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class FileUploadEventDTO {
+public class FileUploadEventDto {
     private String fileId;
     private String fileName;
     private String storageLocation;

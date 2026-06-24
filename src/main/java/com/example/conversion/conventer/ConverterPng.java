@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.dto.ConversionResultDto;
 import com.example.conversion.exceptions.FileNotFoundException;
 import com.example.conversion.exceptions.PngConvertException;
 import com.example.conversion.util.ExtensionNameCorrection;
@@ -18,7 +18,7 @@ public class ConverterPng implements FileConverter {
     }
 
     @Override
-    public ConversionResultDTO convert(byte[] fileByte, String fileName) {
+    public ConversionResultDto convert(byte[] fileByte, String fileName) {
         try {
             ByteArrayInputStream bis = new ByteArrayInputStream(fileByte);
             BufferedImage image = ImageIO.read(bis);
@@ -32,7 +32,7 @@ public class ConverterPng implements FileConverter {
 
             byte[] byteArray = bos.toByteArray();
 
-            return new ConversionResultDTO(
+            return new ConversionResultDto(
                     byteArray,
                     ExtensionNameCorrection.replaceExtension(fileName, "png"),
                     "png",

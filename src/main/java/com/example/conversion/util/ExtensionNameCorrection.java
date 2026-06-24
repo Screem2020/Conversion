@@ -11,9 +11,7 @@ public final class ExtensionNameCorrection {
 
         int dot = fileName.lastIndexOf('.');
 
-        String baseName = (dot == -1)
-                ? fileName
-                : fileName.substring(0, dot);
+        String baseName = (dot == -1) ? fileName : fileName.substring(0, dot);
 
         return baseName + "." + extension;
     }

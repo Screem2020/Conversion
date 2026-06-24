@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.dto.ConversionResultDto;
 import com.example.conversion.util.ExtensionNameCorrection;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,7 @@ public class ConverterTxt implements FileConverter {
     }
 
     @Override
-    public ConversionResultDTO convert(byte[] fileByte, String fileName) {
+    public ConversionResultDto convert(byte[] fileByte, String fileName) {
         String text = new String(fileByte, StandardCharsets.UTF_8);
         String normalizedText = text.trim();
 
@@ -22,7 +22,7 @@ public class ConverterTxt implements FileConverter {
         }
 
         byte[] bytes = normalizedText.getBytes(StandardCharsets.UTF_8);
-        return new ConversionResultDTO(
+        return new ConversionResultDto(
                 bytes,
                 ExtensionNameCorrection.replaceExtension(fileName, "txt"),
                 "txt",

@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.dto.ConversionResultDto;
 import com.example.conversion.exceptions.FileNotFoundException;
 import com.example.conversion.exceptions.PdfConvertException;
 import com.example.conversion.util.ExtensionNameCorrection;
@@ -20,7 +20,7 @@ public class ConverterPdf implements FileConverter {
     }
 
     @Override
-    public ConversionResultDTO convert(byte[] fileByte, String fileName) {
+    public ConversionResultDto convert(byte[] fileByte, String fileName) {
         try{
             ByteArrayInputStream bais = new ByteArrayInputStream(fileByte);
             BufferedImage image = ImageIO.read(bais);
@@ -34,7 +34,7 @@ public class ConverterPdf implements FileConverter {
 
             byte[] byteArray = bos.toByteArray();
 
-            return new ConversionResultDTO(
+            return new ConversionResultDto(
                     byteArray,
                     ExtensionNameCorrection.replaceExtension(fileName, "png"),
                     "image/png",

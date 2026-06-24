@@ -1,14 +1,13 @@
 package com.example.conversion.util;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Data
+@NoArgsConstructor
 public class FileNameUtil {
 
-    public static String DEFAULT_NAME = "file";
+    public static final String DEFAULT_NAME = "file";
 
     public static String getBaseName(String originalFileName) {
         if (originalFileName == null || originalFileName.isBlank()) {

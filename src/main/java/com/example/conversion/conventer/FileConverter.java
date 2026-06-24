@@ -1,9 +1,9 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.dto.ConversionResultDto;
 
 public interface FileConverter {
     boolean supports(String extension);
-    ConversionResultDTO convert(byte[] fileByte, String fileName);
+    ConversionResultDto convert(byte[] fileByte, String fileName);
 
 }

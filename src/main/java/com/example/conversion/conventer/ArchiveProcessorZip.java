@@ -1,12 +1,13 @@
 package com.example.conversion.conventer;
 
 import com.example.conversion.conventer.core.ConversionDispatcher;
-import com.example.conversion.dto.ConversionResultDTO;
+import com.example.conversion.dto.ConversionResultDto;
 import com.example.conversion.exceptions.ZipConverterException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import com.example.conversion.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.ZipEntry;
@@ -25,7 +26,7 @@ public class ArchiveProcessorZip implements FileConverter {
     }
 
     @Override
-    public ConversionResultDTO convert(byte[] fileByte, String fileName) {
+    public ConversionResultDto convert(byte[] fileByte, String fileName) {
         try (
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(fileByte);
                 ZipInputStream zipInputStream = new ZipInputStream(inputStream);
@@ -41,15 +42,15 @@ public class ArchiveProcessorZip implements FileConverter {
                 }
 
                 byte[] fileBytes = IOUtils.readEntry(zipInputStream);
-                ConversionResultDTO result = dispatcher.conversion(fileBytes, entry.getName());
+                ConversionResultDto result = dispatcher.conversionFileInDto(fileBytes, entry.getName());
 
-                ZipEntry zipEntry = new ZipEntry(result.getFileName());
+                ZipEntry zipEntry = new ZipEntry(result.fileName());
                 zipOutputStream.putNextEntry(zipEntry);
-                zipOutputStream.write(result.getBytes());
+                zipOutputStream.write(result.bytes());
                 zipOutputStream.closeEntry();
 
             }
-            return new ConversionResultDTO(
+            return new ConversionResultDto(
                     outputStream.toByteArray(),
                     ExtensionNameCorrection.replaceExtension(fileName, "zip"),
                     "application/zip",
