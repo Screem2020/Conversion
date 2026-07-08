@@ -1,4 +1,4 @@
-package com.example.conversion.dto;
+package com.example.conversion.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

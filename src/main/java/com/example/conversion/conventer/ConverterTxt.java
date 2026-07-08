@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.util.ExtensionNameCorrection;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;

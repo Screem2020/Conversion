@@ -1,7 +1,7 @@
-package com.example.conversion.listener;
+package com.example.conversion.kafka.consumer;
 
-import com.example.conversion.dto.FileUploadEventDto;
-import com.example.conversion.entity.InboxMessage;
+import com.example.conversion.model.dto.FileUploadEventDto;
+import com.example.conversion.model.entity.InboxMessage;
 import com.example.conversion.repository.InboxRepository;
 import com.example.conversion.service.FileProcessingService;
 import lombok.RequiredArgsConstructor;

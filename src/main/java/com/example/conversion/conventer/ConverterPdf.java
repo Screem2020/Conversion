@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.exceptions.FileNotFoundException;
 import com.example.conversion.exceptions.PdfConvertException;
 import com.example.conversion.util.ExtensionNameCorrection;

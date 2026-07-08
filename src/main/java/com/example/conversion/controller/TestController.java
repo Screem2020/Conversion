@@ -1,6 +1,6 @@
 package com.example.conversion.controller;
 
-import com.example.conversion.conventer.core.ConversionFile;
+import com.example.conversion.conventer.core.FileConversionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/convert")
 public class TestController {
-    private final ConversionFile conversionFile;
+    private final FileConversionService fileConversionService;
     @Value("${spring.kafka.topics.file-upload}")
     private String topicName;
 
@@ -19,7 +19,7 @@ public class TestController {
     public ResponseEntity<String> convert(@RequestParam("file") MultipartFile file){
 
         try {
-            String fileId = conversionFile.generateFullNameFile(
+            String fileId = fileConversionService.generateFullNameFile(
                     file.getBytes(),
                     file.getOriginalFilename()
             );

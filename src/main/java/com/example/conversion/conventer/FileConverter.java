@@ -1,6 +1,6 @@
 package com.example.conversion.conventer;
 
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 
 public interface FileConverter {
     boolean supports(String extension);

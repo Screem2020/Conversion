@@ -1,7 +1,7 @@
 package com.example.conversion.conventer;
 
 import com.example.conversion.conventer.core.ConversionDispatcher;
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.exceptions.ZipConverterException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import com.example.conversion.util.IOUtils;

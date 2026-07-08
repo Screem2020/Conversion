@@ -1,12 +1,12 @@
-package com.example.conversion.dto;
+package com.example.conversion.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
-@NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class FileUpdateEventDto {
     private String fileId;
     private String fileName;

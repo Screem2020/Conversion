@@ -1,10 +1,10 @@
-package com.example.conversion.entity;
+package com.example.conversion.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor

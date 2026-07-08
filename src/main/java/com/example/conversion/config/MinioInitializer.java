@@ -1,4 +1,4 @@
-package com.example.conversion.minio;
+package com.example.conversion.config;
 
 import com.example.conversion.exceptions.InitMinioException;
 import io.minio.BucketExistsArgs;

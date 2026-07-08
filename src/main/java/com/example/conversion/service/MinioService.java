@@ -1,6 +1,6 @@
-package com.example.conversion.minio;
+package com.example.conversion.service;
 
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.exceptions.ConvertingFileException;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;

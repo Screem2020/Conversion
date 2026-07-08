@@ -1,17 +1,16 @@
 package com.example.conversion.service;
 
 import com.example.conversion.conventer.core.ConversionDispatcher;
-import com.example.conversion.conventer.core.ConversionFile;
-import com.example.conversion.dto.ConversionResultDto;
-import com.example.conversion.dto.FileUpdateEventDto;
-import com.example.conversion.dto.FileUploadEventDto;
-import com.example.conversion.kafka.ProducerEvent;
-import com.example.conversion.minio.MinioService;
+import com.example.conversion.conventer.core.FileConversionService;
+import com.example.conversion.model.dto.ConversionResultDto;
+import com.example.conversion.model.dto.FileUpdateEventDto;
+import com.example.conversion.model.dto.FileUploadEventDto;
+import com.example.conversion.model.entity.OutboxTable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.InputStream;
 
 @Transactional
@@ -19,31 +18,33 @@ import java.io.InputStream;
 @Service
 @Slf4j
 public class FileProcessingService {
-    private final ConversionFile conversionFile;
+    private final FileConversionService fileConversionService;
     private final MinioService minioService;
-    private final ProducerEvent producerEvent;
+    private final SchedulerService schedulerService;
     private final ConversionDispatcher conversionDispatcher;
-    @Value("${spring.kafka.topics.file-update}")
-    private String fileUpdateTopic;
+    private final OutboxTableService outboxTableService;
 
     public void process(FileUploadEventDto event) {
         try{
             InputStream file = minioService.getFile(event.getFileName());
             byte[] bytes = file.readAllBytes();
 
-            String convertedFileId = conversionFile.generateFullNameFile(bytes, event.getFileName());
+            String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
             FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
+
+            OutboxTable outboxTableTask = new OutboxTable(update.getFileId(), update.getFileName());
+            outboxTableService.save(outboxTableTask);
+
+            schedulerService.retryTableOutbox();
+
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
-
-            producerEvent.sendFileUpdateEvent(fileUpdateTopic, update);
-
         } catch (Exception e){
-            log.error("Error while listening for file update", e);
-            FileUpdateEventDto failed = new FileUpdateEventDto(event.getFileId(), event.getFileName(), null);
-            producerEvent.sendFileUpdateEvent(fileUpdateTopic, failed);
+            log.error(e.getMessage());
+//            FileUpdateEventDto failed = new FileUpdateEventDto(event.getFileId(), event.getFileName(), null);
+//            eventProducer.sendFileUpdateEvent(fileUpdateTopic, failed);
         }
     }
 }

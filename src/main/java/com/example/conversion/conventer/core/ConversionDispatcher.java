@@ -1,7 +1,7 @@
 package com.example.conversion.conventer.core;
 
 import com.example.conversion.conventer.FileConverter;
-import com.example.conversion.dto.ConversionResultDto;
+import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.exceptions.NotConvertingException;
 import com.example.conversion.util.FileNameUtil;
 import lombok.Data;

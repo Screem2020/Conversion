@@ -1,4 +1,4 @@
-package com.example.conversion.dto;
+package com.example.conversion.model.dto;
 
 public record ConversionResultDto(
      byte[] bytes,
