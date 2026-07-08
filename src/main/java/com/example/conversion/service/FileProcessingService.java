@@ -38,7 +38,7 @@ public class FileProcessingService {
             OutboxTable outboxTableTask = new OutboxTable(update.getFileId(), update.getFileName());
             outboxTableService.save(outboxTableTask);
 
-            schedulerService.retryTableOutbox();
+            schedulerService.publishOutboxEvents();
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
         } catch (Exception e){

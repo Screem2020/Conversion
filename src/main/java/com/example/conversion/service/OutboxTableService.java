@@ -18,7 +18,7 @@ public class OutboxTableService {
         outboxRepository.save(outboxTable);
     }
 
-    public List<OutboxTable> findAllEventToList() {
+    public List<OutboxTable> eventOutboxToList() {
         Pageable pageable = PageRequest.of(0, 10);
         outboxRepository.findAll(pageable).forEach(or -> or.setStatus(OutboxStatus.IN_PROGRESS));
         return outboxRepository

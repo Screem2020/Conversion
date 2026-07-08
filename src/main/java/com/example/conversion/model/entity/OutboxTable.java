@@ -4,7 +4,6 @@ import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -12,7 +11,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Table(name = "outbox_table")
 public class OutboxTable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
