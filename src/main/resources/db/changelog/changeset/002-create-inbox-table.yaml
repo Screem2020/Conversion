@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-table
+      author: misha
+
+      changes:
+        - createTable:
+            tableName: inbox
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: event_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

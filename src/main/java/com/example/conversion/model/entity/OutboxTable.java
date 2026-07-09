@@ -12,7 +12,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "outbox_table")
+@Table(name = "outbox")
 public class OutboxTable {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

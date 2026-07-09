@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Data
-@Table(name = "inbox_messages")
+@Table(name = "inbox")
 public class InboxMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
