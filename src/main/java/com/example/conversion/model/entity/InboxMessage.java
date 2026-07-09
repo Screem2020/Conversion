@@ -13,8 +13,8 @@ import java.util.UUID;
 @Table(name = "inbox")
 public class InboxMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private UUID eventId;
     private LocalDateTime timestamp;
 }
