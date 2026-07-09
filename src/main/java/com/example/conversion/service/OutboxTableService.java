@@ -24,7 +24,7 @@ public class OutboxTableService {
 
     public List<OutboxTable> eventOutboxToList() {
         Pageable pageable = PageRequest.of(0, 10);
-        var events = outboxRepository.findByStatus(OutboxStatus.NEW, pageable);
+        var events = outboxRepository.findByStatus(OutboxStatus.NEW, pageable); // тут я через БД выполняю поиск, но есть готовый метод в enum
         List<OutboxTable> content = events.getContent();
         content.forEach(or -> or.setStatus(OutboxStatus.IN_PROGRESS));
         return content.stream()
