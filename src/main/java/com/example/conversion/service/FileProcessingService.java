@@ -22,29 +22,28 @@ import java.io.InputStream;
 public class FileProcessingService {
     private final FileConversionService fileConversionService;
     private final MinioService minioService;
-    private final SchedulerService schedulerService;
     private final ConversionDispatcher conversionDispatcher;
     private final OutboxTableService outboxTableService;
 
     public void process(FileUploadEventDto event) {
-        try{
-            InputStream file = minioService.getFile(event.getFileName());
+        OutboxTable outboxTable = null;
+        try(InputStream file = minioService.getFile(event.getFileName())) {
             byte[] bytes = file.readAllBytes();
 
             String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
             FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
 
-            ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
-
-            OutboxTable outboxTableTask = new OutboxTable(update.getFileId(), update.getFileName(),
+            outboxTable = new OutboxTable(update.getFileId(), update.getFileName(),
                     OutboxEventType.CONVERTER_TASK, OutboxStatus.NEW);
-            outboxTableService.save(outboxTableTask);
 
-            schedulerService.publishOutboxEvents();
+            ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
         } catch (Exception e){
+            if (outboxTable != null) {
+                outboxTableService.save(outboxTable);
+            }
             log.error("Error processing file upload event", e);
         }
     }

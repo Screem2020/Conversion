@@ -22,5 +22,4 @@ public class OutboxTable {
     private OutboxEventType type;
     @Enumerated(EnumType.STRING)
     private OutboxStatus status;
-
 }
