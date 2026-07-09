@@ -1,15 +1,13 @@
 package com.example.conversion.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Data
 @Table(name = "inbox_messages")
