@@ -5,7 +5,6 @@ import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
 import com.example.conversion.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class OutboxTableService {
 
     public List<OutboxTable> eventOutboxToList() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<OutboxTable> events = outboxRepository.findAll(pageable);
+        var events = outboxRepository.findByStatus(OutboxStatus.NEW, pageable);
         List<OutboxTable> content = events.getContent();
         content.forEach(or -> or.setStatus(OutboxStatus.IN_PROGRESS));
         return content.stream()

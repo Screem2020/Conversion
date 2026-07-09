@@ -6,6 +6,8 @@ import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.model.dto.FileUpdateEventDto;
 import com.example.conversion.model.dto.FileUploadEventDto;
 import com.example.conversion.model.entity.OutboxTable;
+import com.example.conversion.model.enums.OutboxEventType;
+import com.example.conversion.model.enums.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,8 @@ public class FileProcessingService {
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
-            OutboxTable outboxTableTask = new OutboxTable(update.getFileId(), update.getFileName());
+            OutboxTable outboxTableTask = new OutboxTable(update.getFileId(), update.getFileName(),
+                    OutboxEventType.CONVERTER_TASK, OutboxStatus.NEW);
             outboxTableService.save(outboxTableTask);
 
             schedulerService.publishOutboxEvents();

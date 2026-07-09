@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public enum OutboxStatus {
-    SUCCESS, IN_PROGRESS, FILED;
+    SUCCESS, IN_PROGRESS, NEW;
 
     public static OutboxStatus fromStringStatus(String status) {
         for (OutboxStatus outboxStatus : values()) {

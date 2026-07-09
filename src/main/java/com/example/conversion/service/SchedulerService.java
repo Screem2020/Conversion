@@ -42,7 +42,7 @@ public class SchedulerService {
 
         } catch (Exception e) {
             log.error("Retrying table outbox",e);
-            OutboxTable failed = new OutboxTable(outboxTable.getId(), outboxTable.getPayload());
+            OutboxTable failed = new OutboxTable(outboxTable.getId(), null,null, outboxTable.getStatus());
             eventProducer.sendFileUpdateEvent(fileUpdateTopic, failed.getId(), failed.getPayload());
         }
     }
