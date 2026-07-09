@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -16,6 +17,6 @@ public class InboxMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String eventId;
+    private UUID eventId;
     private LocalDateTime timestamp;
 }

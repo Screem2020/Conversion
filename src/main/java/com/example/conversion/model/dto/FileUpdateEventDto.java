@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class FileUpdateEventDto {
-    private String fileId;
+    private UUID fileId;
     private String fileName;
     private String resultPath;
 }

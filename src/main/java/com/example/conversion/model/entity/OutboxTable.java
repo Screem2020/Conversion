@@ -7,14 +7,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
 @RequiredArgsConstructor
 @Table(name = "outbox_table")
 public class OutboxTable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(columnDefinition = "jsonb")
     private String payload;
     @Enumerated(EnumType.STRING)
@@ -22,7 +24,7 @@ public class OutboxTable {
     @Enumerated(EnumType.STRING)
     private OutboxStatus status;
 
-    public OutboxTable(String id, String payload) {
+    public OutboxTable(UUID id, String payload) {
         this.id = id;
         this.payload = payload;
     }

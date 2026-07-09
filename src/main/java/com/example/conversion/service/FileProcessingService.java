@@ -42,9 +42,7 @@ public class FileProcessingService {
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
         } catch (Exception e){
-            log.error(e.getMessage());
-//            FileUpdateEventDto failed = new FileUpdateEventDto(event.getFileId(), event.getFileName(), null);
-//            eventProducer.sendFileUpdateEvent(fileUpdateTopic, failed);
+            log.error("Error processing file upload event", e);
         }
     }
 }

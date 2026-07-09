@@ -3,9 +3,9 @@ package com.example.conversion.service;
 import com.example.conversion.kafka.producer.EventProducer;
 import com.example.conversion.model.entity.OutboxTable;
 import com.example.conversion.model.enums.OutboxStatus;
-import com.example.conversion.repository.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,20 +24,26 @@ public class SchedulerService {
 
     @Transactional
     @Scheduled(fixedRate = 5000)
+    @SchedulerLock(
+            name = "publishOutboxEvents",
+            lockAtLeastFor ="PT1M",
+            lockAtMostFor ="PT10M")
     public void publishOutboxEvents() {
+        List<OutboxTable> nextEvent = outboxTableService.eventOutboxToList();
+        if (nextEvent.isEmpty()) {
+            log.info("No events to update");
+            return;
+        }
+        OutboxTable outboxTable = nextEvent.getFirst();
         try {
-            List<OutboxTable> nextEvent = outboxTableService.eventOutboxToList();
-            if (nextEvent.isEmpty()) {
-                log.info("No events to update");
-                return;
-            }
-            OutboxTable outboxTable = nextEvent.getFirst();
             log.info("Starting retry table outbox");
             eventProducer.sendFileUpdateEvent(fileUpdateTopic, outboxTable.getId(), outboxTable.getPayload());
-            outboxTable.setStatus(OutboxStatus.SUCCESS); // стоит вынести отдельно
+            outboxTable.setStatus(OutboxStatus.SUCCESS);
 
         } catch (Exception e) {
             log.error("Retrying table outbox",e);
+            OutboxTable failed = new OutboxTable(outboxTable.getId(), null);
+            eventProducer.sendFileUpdateEvent(fileUpdateTopic, failed.getId(), failed.getPayload());
         }
     }
 }

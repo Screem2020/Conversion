@@ -29,6 +29,8 @@
 	<properties>
 		<java.version>21</java.version>
         <minio.version>8.6.0</minio.version>
+        <schedlock-spring.version>6.10.0</schedlock-spring.version>
+        <schedlock-jdbc.version>6.10.0</schedlock-jdbc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,6 +41,17 @@
 <!--			<groupId>org.springframework.boot</groupId>-->
 <!--			<artifactId>spring-boot-starter-liquibase</artifactId>-->
 <!--		</dependency>-->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>${schedlock-spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>${schedlock-jdbc.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.minio</groupId>

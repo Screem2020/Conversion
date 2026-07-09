@@ -10,9 +10,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class EventProducer {
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<UUID, String> kafkaTemplate;
 
-    public void sendFileUpdateEvent(String topic, String fileId, String fileName) {
+    public void sendFileUpdateEvent(String topic, UUID fileId, String fileName) {
         kafkaTemplate.send(topic, fileId, fileName);
     }
 
