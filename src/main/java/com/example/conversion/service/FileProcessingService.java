@@ -26,28 +26,30 @@ public class FileProcessingService {
     private final OutboxTableService outboxTableService;
 
     public void process(FileUploadEventDto event) {
-        OutboxTable outboxTable = null;
-        try(InputStream file = minioService.getFile(event.getFileName())) {
+        FileUpdateEventDto update = null;
+        try (InputStream file = minioService.getFile(event.getFileName())) {
             byte[] bytes = file.readAllBytes();
 
             String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
-            FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
+            update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
 
-            outboxTable = new OutboxTable(update.getFileId(), update.getFileName(),
-                    OutboxEventType.CONVERTER_TASK, OutboxStatus.NEW);
-
-            outboxTableService.save(outboxTable);
+            OutboxTable completedEvent = new OutboxTable(update.getFileId(), update.getFileName(),
+                    OutboxEventType.FILE_CONVERTER, OutboxStatus.NEW);
+            outboxTableService.save(completedEvent);
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
-        } catch (Exception e){
-            if (outboxTable != null) {
-                outboxTable.setStatus(OutboxStatus.IN_PROGRESS);
-                outboxTableService.save(outboxTable);
-            }
+
+        } catch (Exception e) {
+            if (update != null) {
+                OutboxTable failedEvent = new OutboxTable(update.getFileId(), update.getFileName(),
+                        OutboxEventType.FILE_FAILED, OutboxStatus.NEW);
+            log.info("Sending failed event for {}", failedEvent.getId());
+            outboxTableService.save(failedEvent);
             log.error("Error processing file upload event", e);
+            }
         }
     }
 }

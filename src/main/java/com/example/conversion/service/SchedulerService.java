@@ -1,7 +1,9 @@
 package com.example.conversion.service;
 
+import com.example.conversion.exceptions.ConvertingFileException;
 import com.example.conversion.kafka.producer.EventProducer;
 import com.example.conversion.model.entity.OutboxTable;
+import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +30,8 @@ public class SchedulerService {
     @Scheduled(fixedRate = 5000)
     @SchedulerLock(
             name = "publishOutboxEvents",
-            lockAtLeastFor ="PT1M",
-            lockAtMostFor ="PT10M")
+            lockAtLeastFor = "PT1M",
+            lockAtMostFor = "PT10M")
     public void publishOutboxEvents() {
         List<OutboxTable> nextEvent = outboxTableService.eventOutboxToList();
         if (nextEvent.isEmpty()) {
@@ -38,14 +40,18 @@ public class SchedulerService {
         }
         OutboxTable outboxTable = nextEvent.getFirst();
         try {
-            log.info("Starting retry table outbox");
-            eventProducer.sendFileUpdateEvent(fileUpdateTopic, outboxTable.getId(), outboxTable.getPayload());
+            if (outboxTable.getType() == OutboxEventType.FILE_FAILED) {
+                eventProducer.sendFileFailedEvent(fileFailedTopic, outboxTable.getId(), outboxTable.getPayload());
+                log.info("File failed topic");
+            } else {
+                log.info("Starting retry table outbox");
+                eventProducer.sendFileUpdateEvent(fileUpdateTopic, outboxTable.getId(), outboxTable.getPayload());
+            }
             outboxTable.setStatus(OutboxStatus.SUCCESS);
-
         } catch (Exception e) {
-            log.error("Retrying table outbox",e);
-            OutboxTable failed = new OutboxTable(outboxTable.getId(), null,null, outboxTable.getStatus());
-            eventProducer.sendFileUpdateEvent(fileFailedTopic, failed.getId(), failed.getPayload());
+            outboxTable.setStatus(OutboxStatus.NEW);
+            log.error("Retrying table outbox", e);
+            throw new ConvertingFileException("Retry table outbox failed");
         }
     }
 }

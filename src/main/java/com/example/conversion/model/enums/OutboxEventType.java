@@ -1,7 +1,7 @@
 package com.example.conversion.model.enums;
 
 public enum OutboxEventType {
-    CONVERTER_TASK,
-    ADD;
+    FILE_CONVERTER,
+    FILE_FAILED;
 }
 
