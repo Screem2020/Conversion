@@ -37,11 +37,14 @@ public class FileProcessingService {
             outboxTable = new OutboxTable(update.getFileId(), update.getFileName(),
                     OutboxEventType.CONVERTER_TASK, OutboxStatus.NEW);
 
+            outboxTableService.save(outboxTable);
+
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
         } catch (Exception e){
             if (outboxTable != null) {
+                outboxTable.setStatus(OutboxStatus.IN_PROGRESS);
                 outboxTableService.save(outboxTable);
             }
             log.error("Error processing file upload event", e);

@@ -19,6 +19,8 @@ import java.util.List;
 public class SchedulerService {
     @Value("${spring.kafka.topics.file-update}")
     private String fileUpdateTopic;
+    @Value("${spring.kafka.topics.file-failed}")
+    private String fileFailedTopic;
     private final OutboxTableService outboxTableService;
     private final EventProducer eventProducer;
 
@@ -43,7 +45,7 @@ public class SchedulerService {
         } catch (Exception e) {
             log.error("Retrying table outbox",e);
             OutboxTable failed = new OutboxTable(outboxTable.getId(), null,null, outboxTable.getStatus());
-            eventProducer.sendFileUpdateEvent(fileUpdateTopic, failed.getId(), failed.getPayload());
+            eventProducer.sendFileUpdateEvent(fileFailedTopic, failed.getId(), failed.getPayload());
         }
     }
 }

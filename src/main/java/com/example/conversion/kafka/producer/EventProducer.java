@@ -1,6 +1,5 @@
 package com.example.conversion.kafka.producer;
 
-import com.example.conversion.model.dto.FileUpdateEventDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

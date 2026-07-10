@@ -8,7 +8,7 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   application:
-    name: mydb
+    name: conversion-service
   datasource:
     url: jdbc:postgresql://localhost:5432/mydb
     username: POSTGRES
@@ -17,12 +17,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
     show-sql: true
+
   kafka:
     topics:
       file-update: file-update-topic
       file-upload: file-upload-topic
+      file-failed: file-failed-topic
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
