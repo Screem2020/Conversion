@@ -7,16 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Transactional
-@Service
+@Component
 @RequiredArgsConstructor
-public class OutboxTableService {
+public class OutboxManager {
     private final OutboxRepository outboxRepository;
 
     public void save(OutboxTable outboxTable) {
@@ -24,12 +24,12 @@ public class OutboxTableService {
     }
 
     public List<OutboxTable> eventOutboxToList() {
-        Pageable pageable = PageRequest.of(0, 10);
-        var events = outboxRepository.findByStatus(OutboxStatus.NEW, pageable);
-        List<OutboxTable> content = events.getContent();
-        return content.stream()
+        Pageable pageable = PageRequest.of(0, 100);
+        return outboxRepository
+                .findByStatus(OutboxStatus.NEW, pageable)
+                .stream()
+                .peek(outboxTable -> outboxTable.setStatus(OutboxStatus.NEW))
                 .peek(or -> or.setStatus(OutboxStatus.IN_PROGRESS))
                 .toList();
-
     }
 }

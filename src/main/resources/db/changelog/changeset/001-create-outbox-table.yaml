@@ -16,6 +16,12 @@ databaseChangeLog:
                     nullable: false
 
               - column:
+                  name: outbox_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
                   name: payload
                   type: JSONB
                   constraints:

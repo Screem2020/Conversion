@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 
@@ -23,33 +24,34 @@ public class FileProcessingService {
     private final FileConversionService fileConversionService;
     private final MinioService minioService;
     private final ConversionDispatcher conversionDispatcher;
-    private final OutboxTableService outboxTableService;
+    private final OutboxManager outboxManager;
+    private final ObjectMapper objectMapper;
 
     public void process(FileUploadEventDto event) {
-        FileUpdateEventDto update = null;
         try (InputStream file = minioService.getFile(event.getFileName())) {
             byte[] bytes = file.readAllBytes();
 
             String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getFileName());
             String filePath = minioService.getFilePath(convertedFileId);
-            update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
-
-            OutboxTable completedEvent = new OutboxTable(update.getFileId(), update.getFileName(),
-                    OutboxEventType.FILE_CONVERTER, OutboxStatus.NEW);
-            outboxTableService.save(completedEvent);
+            FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
 
+            String payload = objectMapper.writeValueAsString(update);
+            OutboxTable completedEvent = new OutboxTable(null, update.getFileId(), payload,
+                    OutboxEventType.FILE_COMPLETED, OutboxStatus.NEW);
+
+            outboxManager.save(completedEvent);
+
         } catch (Exception e) {
-            if (update != null) {
-                OutboxTable failedEvent = new OutboxTable(update.getFileId(), update.getFileName(),
-                        OutboxEventType.FILE_FAILED, OutboxStatus.NEW);
-            log.info("Sending failed event for {}", failedEvent.getId());
-            outboxTableService.save(failedEvent);
             log.error("Error processing file upload event", e);
-            }
+            String payload = objectMapper.writeValueAsString(event);
+            OutboxTable failedEvent = new OutboxTable(null, event.getFileId(), payload,
+                    OutboxEventType.FILE_FAILED, OutboxStatus.NEW);
+            outboxManager.save(failedEvent);
         }
+
     }
 }
