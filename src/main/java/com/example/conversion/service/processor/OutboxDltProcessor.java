@@ -8,16 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
-public class OutboxCompletedProcessor implements OutboxEventProcessor {
+@Service
+public class OutboxDltProcessor implements OutboxEventProcessor{
 
     private final EventProducer eventProducer;
     private final KafkaTopics kafkaTopics;
 
     @Override
     public void execute(OutboxTable outboxTable) {
-        eventProducer.sendFileUpdateEvent(kafkaTopics.getFileUpdate(), outboxTable.getOutboxId(), outboxTable.getPayload());
-        log.info("Update event sent to topic {}", outboxTable.getOutboxId());
+        eventProducer.sendFileDltEvent(kafkaTopics.getFileDlt(), outboxTable.getOutboxId(), outboxTable.getPayload());
+        log.info("Dlt event sent to topic {}", outboxTable.getOutboxId());
     }
 }

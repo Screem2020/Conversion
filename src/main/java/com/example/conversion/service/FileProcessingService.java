@@ -40,7 +40,7 @@ public class FileProcessingService {
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
 
             String payload = objectMapper.writeValueAsString(update);
-            OutboxTable completedEvent = new OutboxTable(null, update.getFileId(), payload,
+            OutboxTable completedEvent = new OutboxTable(null, update.getFileId(), payload, null, 0,
                     OutboxEventType.FILE_COMPLETED, OutboxStatus.NEW);
 
             outboxManager.save(completedEvent);
@@ -48,7 +48,7 @@ public class FileProcessingService {
         } catch (Exception e) {
             log.error("Error processing file upload event", e);
             String payload = objectMapper.writeValueAsString(event);
-            OutboxTable failedEvent = new OutboxTable(null, event.getFileId(), payload,
+            OutboxTable failedEvent = new OutboxTable(null, event.getFileId(), payload, null, 0,
                     OutboxEventType.FILE_FAILED, OutboxStatus.NEW);
             outboxManager.save(failedEvent);
         }

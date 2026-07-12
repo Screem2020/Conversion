@@ -1,7 +1,7 @@
 package com.example.conversion.service;
 
-import com.example.conversion.exceptions.ConvertingFileException;
 import com.example.conversion.model.entity.OutboxTable;
+import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import java.util.List;
 public class SchedulerJobService {
     private final OutboxManager outboxManager;
     private final DispatcherOutbox dispatcherOutbox;
+    private final LifePolicyService lifePolicyService;
 
     @Transactional
     @Scheduled(fixedRate = 5000)
@@ -25,21 +26,23 @@ public class SchedulerJobService {
             name = "publishOutboxEvents",
             lockAtLeastFor = "PT1M",
             lockAtMostFor = "PT10M")
-
-
     public void publishOutboxEvents() {
         List<OutboxTable> nextEvent = outboxManager.eventOutboxToList();
         if (nextEvent.isEmpty()) {
             log.info("No events to update");
             return;
         }
-
         for (OutboxTable outboxTable : nextEvent) {
             try {
+                if (lifePolicyService.processPolicy(outboxTable)){  //если не верно то отправляем в длт
+                    outboxTable.setType(OutboxEventType.FILE_DLT);
+                    outboxTable.setStatus(OutboxStatus.FAILED);
+                } else {
+                    lifePolicyService.registerAttempt(outboxTable);
+                    outboxTable.setStatus(OutboxStatus.SUCCESS);
+                }
                 dispatcherOutbox.dispatcher(outboxTable);
-                outboxTable.setStatus(OutboxStatus.SUCCESS);
             } catch (Exception e) {
-                //TODO: разработать механизм для ограничения безконечных повторений
                 outboxTable.setStatus(OutboxStatus.NEW);
                 log.error("Retrying table outbox", e);
             }

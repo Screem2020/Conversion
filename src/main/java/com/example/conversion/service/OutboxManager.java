@@ -28,8 +28,7 @@ public class OutboxManager {
         return outboxRepository
                 .findByStatus(OutboxStatus.NEW, pageable)
                 .stream()
-                .peek(outboxTable -> outboxTable.setStatus(OutboxStatus.NEW))
-                .peek(or -> or.setStatus(OutboxStatus.IN_PROGRESS))
+                .peek(outboxTable -> outboxTable.setStatus(OutboxStatus.IN_PROGRESS))
                 .toList();
     }
 }

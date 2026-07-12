@@ -4,6 +4,11 @@ minio:
   secret-key: minioadmin
   bucket-name: conversion-files
 
+outbox:
+  retry:
+    timeout: PT5M
+    max-attempts: 300
+
 spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
@@ -24,6 +29,8 @@ spring:
       file-update: file-update-topic
       file-upload: file-upload-topic
       file-failed: file-failed-topic
+      file-dlt: file-update-dlt-topic
+
     bootstrap-servers: localhost:29092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -33,4 +40,5 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
 

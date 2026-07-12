@@ -14,4 +14,5 @@ public class KafkaTopics {
     private String fileUpdate;
     private String fileUpload;
     private String fileFailed;
+    private String fileDlt;
 }

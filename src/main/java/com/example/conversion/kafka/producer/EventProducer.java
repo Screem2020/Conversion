@@ -25,5 +25,12 @@ public class EventProducer {
                 fileId.toString(),
                 payload);
     }
+
+    public void sendFileDltEvent(String topic, UUID fileId, String payload) {
+        kafkaTemplate.send(
+                topic,
+                fileId.toString(),
+                payload);
+    }
 }
 

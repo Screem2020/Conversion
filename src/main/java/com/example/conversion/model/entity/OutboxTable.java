@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -21,6 +22,8 @@ public class OutboxTable {
     @Column(columnDefinition = "jsonb")
     @ColumnTransformer(write = "?::jsonb")
     private String payload;
+    private Instant lifeTime;
+    private Integer attempts;
     @Enumerated(EnumType.STRING)
     private OutboxEventType type;
     @Enumerated(EnumType.STRING)
