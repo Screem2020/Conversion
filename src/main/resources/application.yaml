@@ -3,11 +3,14 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: conversion-files
-
+scheduler:
+  fixed-rate: 1s
 outbox:
   retry:
     timeout: PT5M
     max-attempts: 300
+server:
+  port: 8081
 
 spring:
   liquibase:
@@ -40,5 +43,4 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-
 

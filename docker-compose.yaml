@@ -49,3 +49,7 @@ services:
     command: server /data --console-address ":9001"
 volumes:
   postgres-data:
+
+networks:
+  backend-network:
+    driver: bridge

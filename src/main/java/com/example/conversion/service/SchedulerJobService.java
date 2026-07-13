@@ -21,7 +21,7 @@ public class SchedulerJobService {
     private final LifePolicyService lifePolicyService;
 
     @Transactional
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "${scheduler.fixed-rate}")
     @SchedulerLock(
             name = "publishOutboxEvents",
             lockAtLeastFor = "PT1M",
@@ -29,7 +29,8 @@ public class SchedulerJobService {
     public void publishOutboxEvents() {
         List<OutboxTable> nextEvent = outboxManager.eventOutboxToList();
         if (nextEvent.isEmpty()) {
-            log.info("No events to update");
+            log.info("No events " +
+                    "to update");
             return;
         }
         for (OutboxTable outboxTable : nextEvent) {
