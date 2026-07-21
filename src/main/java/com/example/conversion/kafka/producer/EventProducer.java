@@ -13,11 +13,11 @@ import java.util.UUID;
 public class EventProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendFileUpdateEvent(String topic, UUID fileId, String fileName) {
+    public void sendFileUpdateEvent(String topic, UUID fileId, String payload) {
         kafkaTemplate.send(
                         topic,
                         fileId.toString(),
-                        fileName);
+                        payload);
     }
     public void sendFileFailedEvent(String topic, UUID fileId, String payload) {
         kafkaTemplate.send(

@@ -35,7 +35,7 @@ public class SchedulerJobService {
         }
         for (OutboxTable outboxTable : nextEvent) {
             try {
-                if (lifePolicyService.processPolicy(outboxTable)){  //если не верно то отправляем в длт
+                if (lifePolicyService.processPolicy(outboxTable)){
                     outboxTable.setType(OutboxEventType.FILE_DLT);
                     outboxTable.setStatus(OutboxStatus.FAILED);
                 } else {
