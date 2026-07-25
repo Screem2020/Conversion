@@ -21,7 +21,6 @@ public class LifePolicyService {
     private boolean checkLifeTime(OutboxTable outboxTable) {
         Duration between = Duration.between(outboxTable.getLifeTime(), Instant.now());
         return between.compareTo(timeout) >= 0;
-
     }
 
     private boolean checkLifeAttempts(OutboxTable outboxTable) {
