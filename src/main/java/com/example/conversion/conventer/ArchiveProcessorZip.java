@@ -6,6 +6,8 @@ import com.example.conversion.exceptions.ZipConverterException;
 import com.example.conversion.util.ExtensionNameCorrection;
 import com.example.conversion.util.IOUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -15,9 +17,12 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 @Component
-@RequiredArgsConstructor
 public class ArchiveProcessorZip implements FileConverter {
     private final ConversionDispatcher dispatcher;
+
+    public ArchiveProcessorZip(@Lazy ConversionDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+    }
 
 
     @Override

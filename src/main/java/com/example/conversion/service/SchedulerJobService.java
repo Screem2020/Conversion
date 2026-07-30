@@ -36,6 +36,7 @@ public class SchedulerJobService {
         for (OutboxTable outboxTable : nextEvent) {
             try {
                 if (lifePolicyService.processPolicy(outboxTable)){
+                    log.info("File send to dlt");
                     outboxTable.setType(OutboxEventType.FILE_DLT);
                     outboxTable.setStatus(OutboxStatus.FAILED);
                 } else {

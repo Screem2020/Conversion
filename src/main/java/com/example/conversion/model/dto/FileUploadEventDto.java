@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FileUploadEventDto {
     private UUID fileId;
-    private String fileName;
+    private String keyFile;
     private String storageLocation;
     private String targetExtension;
 }

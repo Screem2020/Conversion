@@ -5,16 +5,18 @@ import com.example.conversion.model.dto.ConversionResultDto;
 import com.example.conversion.exceptions.NotConvertingException;
 import com.example.conversion.util.FileNameUtil;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
-@Service
-@Data
+@Component
+@RequiredArgsConstructor
 public class ConversionDispatcher {
-    private List<FileConverter> converters;
+    private final List<FileConverter> converters;
 
     public ConversionResultDto conversionFileInDto(byte[] fileBytes, String fileName) {
         log.info("Start conversion file in dto");

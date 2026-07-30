@@ -16,5 +16,5 @@ public class InboxMessage {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID eventId;
-    private LocalDateTime timestamp;
+    private String keyFile;
 }

@@ -8,6 +8,7 @@ import com.example.conversion.model.dto.FileUploadEventDto;
 import com.example.conversion.model.entity.OutboxTable;
 import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
+import com.example.conversion.repository.InboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,22 +27,29 @@ public class FileProcessingService {
     private final ConversionDispatcher conversionDispatcher;
     private final OutboxManager outboxManager;
     private final ObjectMapper objectMapper;
+    private final InboxRepository inboxRepository;
 
     public void process(FileUploadEventDto event) {
-        try (InputStream file = minioService.getFile(event.getFileName())) {
+        try (InputStream file = minioService.getFile(event.getKeyFile())) {
             byte[] bytes = file.readAllBytes();
 
-            String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getFileName());
-            String filePath = minioService.getFilePath(convertedFileId);
-            FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getFileName(), filePath);
+
+            String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getKeyFile());
+            FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getKeyFile());
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
             minioService.saveFile(conversion, convertedFileId, conversion.contentType());
 
             String payload = objectMapper.writeValueAsString(update);
-            OutboxTable completedEvent = new OutboxTable(null, update.getFileId(), payload, null, 0,
-                    OutboxEventType.FILE_COMPLETED, OutboxStatus.NEW);
+            OutboxTable completedEvent = new OutboxTable(
+                    null,
+                    update.getFileId(),
+                    payload,
+                    null,
+                    0,
+                    OutboxEventType.FILE_COMPLETED,
+                    OutboxStatus.NEW);
 
             outboxManager.save(completedEvent);
 

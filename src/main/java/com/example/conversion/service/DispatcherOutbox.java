@@ -26,7 +26,10 @@ public class DispatcherOutbox {
     }
     public void dispatcher(OutboxTable outboxTable) {
         log.debug("Dispatching outbox events for table {}", outboxTable);
-        processors.get(outboxTable.getType()).execute(outboxTable);
+        log.info("TYPE = {}", outboxTable.getType());
+        OutboxEventProcessor outboxEventProcessor = processors.get(outboxTable.getType());
+        log.info("PROCESSOR = {}", outboxEventProcessor);
+        outboxEventProcessor.execute(outboxTable);
 
     }
 }

@@ -25,8 +25,8 @@ public class ConverterTxt implements FileConverter {
         return new ConversionResultDto(
                 bytes,
                 ExtensionNameCorrection.replaceExtension(fileName, "txt"),
-                "txt",
-                "txt/plain"
+                "plain/txt",
+                "txt"
         );
     }
 }

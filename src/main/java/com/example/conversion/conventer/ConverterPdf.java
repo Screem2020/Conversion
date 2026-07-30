@@ -26,22 +26,22 @@ public class ConverterPdf implements FileConverter {
             BufferedImage image = ImageIO.read(bais);
 
             if (image == null) {
-                throw new FileNotFoundException("File is not a valid PNG file");
+                throw new FileNotFoundException("File is not a valid PDF file");
             }
 
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", bos);
+            ImageIO.write(image, "pdf", bos);
 
             byte[] byteArray = bos.toByteArray();
 
             return new ConversionResultDto(
                     byteArray,
-                    ExtensionNameCorrection.replaceExtension(fileName, "png"),
-                    "image/png",
-                    "png"
+                    ExtensionNameCorrection.replaceExtension(fileName, "pdf"),
+                    "application/pdf",
+                    "pdf"
             );
         } catch (Exception e) {
-            throw new PdfConvertException("PNG conversion failed", e);
+            throw new PdfConvertException("PDF conversion failed", e);
         }
     }
 }

@@ -35,8 +35,8 @@ public class ConverterPng implements FileConverter {
             return new ConversionResultDto(
                     byteArray,
                     ExtensionNameCorrection.replaceExtension(fileName, "png"),
-                    "png",
-                    "png/plain"
+                    "image/png",
+                    "png"
             );
         }catch (Exception e){
             throw new PngConvertException("JPG conversion failed", e);

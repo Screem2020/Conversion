@@ -14,6 +14,7 @@ public class EventProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendFileUpdateEvent(String topic, UUID fileId, String payload) {
+        log.info("Sending file update event to topic {} with id {}", topic, fileId);
         kafkaTemplate.send(
                         topic,
                         fileId.toString(),

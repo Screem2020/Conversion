@@ -31,7 +31,7 @@ databaseChangeLog:
                   name: life_time
                   type: TIMESTAMP(5)
                   constraints:
-                    nullable: false
+                    nullable: true
 
               - column:
                   name: attempts

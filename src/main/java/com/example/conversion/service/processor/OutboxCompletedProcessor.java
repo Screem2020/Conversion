@@ -17,7 +17,10 @@ public class OutboxCompletedProcessor implements OutboxEventProcessor {
 
     @Override
     public void execute(OutboxTable outboxTable) {
-        eventProducer.sendFileUpdateEvent(kafkaTopics.getFileUpdate(), outboxTable.getOutboxId(), outboxTable.getPayload());
+        eventProducer.sendFileUpdateEvent(
+                kafkaTopics.getFileUpdate(),
+                outboxTable.getOutboxId(),
+                outboxTable.getPayload());
         log.info("Update event sent to topic {}", outboxTable.getOutboxId());
     }
 }

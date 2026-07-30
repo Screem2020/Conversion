@@ -20,19 +20,19 @@ public class MinioService {
     private String endpoint;
     private final MinioClient minioClient;
 
-    public void saveFile(ConversionResultDto pdfByte, String filename, String content) {
+    public void saveFile(ConversionResultDto pdfByte, String fileId, String content) {
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .object(filename)
+                            .object(fileId)
                             .bucket(bucketName)
                             .stream(new ByteArrayInputStream(pdfByte.bytes()), pdfByte.bytes().length, -1)
                             .contentType(content)
                             .build()
             );
-            log.info("File save to Minio: {}", filename);
+            log.info("File save to Minio: {}", fileId);
         } catch (Exception e) {
-            log.error("Error saving file to Minio:{}",  filename, e);
+            log.error("Error saving file to Minio:{}",  fileId, e);
             throw  new ConvertingFileException("Error saving file to Minio", e);
         }
     }
