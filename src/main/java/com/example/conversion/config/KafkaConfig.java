@@ -18,19 +18,4 @@ public class KafkaConfig {
         FixedBackOff backOff = new FixedBackOff(2000L, 3);
         return new DefaultErrorHandler(recoverer, backOff);
     }
-//@Bean
-//public DefaultErrorHandler errorHandler(KafkaTemplate<String, String> template) {
-//
-//    DeadLetterPublishingRecoverer recoverer =
-//            new DeadLetterPublishingRecoverer(template);
-//
-//    DefaultErrorHandler handler =
-//            new DefaultErrorHandler(recoverer, new FixedBackOff(2000L, 3));
-//
-//    handler.setRetryListeners((record, ex, deliveryAttempt) -> {
-//        log.error("Kafka processing failed. Attempt {}", deliveryAttempt, ex);
-//    });
-//
-//    return handler;
-//}
 }

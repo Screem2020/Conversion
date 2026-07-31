@@ -8,7 +8,6 @@ import com.example.conversion.model.dto.FileUploadEventDto;
 import com.example.conversion.model.entity.OutboxTable;
 import com.example.conversion.model.enums.OutboxEventType;
 import com.example.conversion.model.enums.OutboxStatus;
-import com.example.conversion.repository.InboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,13 +26,15 @@ public class FileProcessingService {
     private final ConversionDispatcher conversionDispatcher;
     private final OutboxManager outboxManager;
     private final ObjectMapper objectMapper;
-    private final InboxRepository inboxRepository;
 
     public void process(FileUploadEventDto event) {
         try (InputStream file = minioService.getFile(event.getKeyFile())) {
             byte[] bytes = file.readAllBytes();
-
-
+            log.info(
+                    "Downloaded file: {}, size: {} bytes",
+                    event.getKeyFile(),
+                    bytes.length
+            );
             String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getKeyFile());
             FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getKeyFile());
 

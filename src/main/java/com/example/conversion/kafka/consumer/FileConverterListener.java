@@ -1,6 +1,6 @@
 package com.example.conversion.kafka.consumer;
 
-import com.example.conversion.exceptions.FileSaveMinioException;
+import com.example.conversion.exceptions.InboxProcessingException;
 import com.example.conversion.model.dto.FileUploadEventDto;
 import com.example.conversion.model.entity.InboxMessage;
 import com.example.conversion.repository.InboxRepository;
@@ -26,7 +26,7 @@ public class FileConverterListener {
             FileUploadEventDto fileUploadEventDto = objectMapper.readValue(event, FileUploadEventDto.class);
             if (inboxRepository.existsByEventId(fileUploadEventDto.getFileId())) {
                 log.error("File with id {} already exists", fileUploadEventDto.getFileId());
-                throw new FileSaveMinioException("file already exists");
+                throw new InboxProcessingException("file already exists");
             }
             saveInboxMessage(fileUploadEventDto);
             fileProcessingService.process(fileUploadEventDto);
