@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -13,8 +12,7 @@ import java.util.UUID;
 @Table(name = "inbox")
 public class InboxMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
     private UUID eventId;
+    private String fileId;
     private String keyFile;
 }

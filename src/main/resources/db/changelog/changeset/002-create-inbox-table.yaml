@@ -8,15 +8,15 @@ databaseChangeLog:
             tableName: inbox
             columns:
               - column:
-                  name: id
+                  name: event_id
                   type: UUID
                   constraints:
                     primaryKey: true
                     nullable: false
 
               - column:
-                  name: event_id
-                  type: UUID
+                  name: file_id
+                  type: varchar(50)
                   constraints:
                     nullable: false
 

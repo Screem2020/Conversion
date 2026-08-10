@@ -4,7 +4,7 @@ minio:
   secret-key: minioadmin
   bucket-name: flow-manager
 scheduler:
-  fixed-rate: 1s
+  fixed-rate: 3s
 outbox:
   retry:
     timeout: PT5M
@@ -43,6 +43,7 @@ spring:
       file-dlt: file-update-dlt-topic
 
     bootstrap-servers: localhost:29092
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

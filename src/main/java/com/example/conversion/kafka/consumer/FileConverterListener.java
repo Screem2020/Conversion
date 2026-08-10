@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -38,9 +40,13 @@ public class FileConverterListener {
     public void saveInboxMessage(FileUploadEventDto fileUploadEventDto) {
         try {
             InboxMessage inboxMessage = new InboxMessage();
-            inboxMessage.setEventId(fileUploadEventDto.getFileId());
+            inboxMessage.setEventId(UUID.randomUUID());
+            inboxMessage.setFileId(fileUploadEventDto.getFileId().toString());
             inboxMessage.setKeyFile(fileUploadEventDto.getKeyFile());
-
+            log.info("BEFORE SAVE: eventId={}, fileId={}, keyFile={}",
+                    inboxMessage.getEventId(),
+                    inboxMessage.getFileId(),
+                    inboxMessage.getKeyFile());
             inboxRepository.save(inboxMessage);
         } catch (Exception ex) {
             log.warn("Error while saving inbox message", ex);

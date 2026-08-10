@@ -16,7 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "outbox")
 public class OutboxTable {
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID outboxId;
     @Column(columnDefinition = "jsonb")

@@ -13,24 +13,24 @@ import java.util.UUID;
 public class EventProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendFileUpdateEvent(String topic, UUID fileId, String payload) {
-        log.info("Sending file update event to topic {} with id {}", topic, fileId);
+    public void sendFileUpdateEvent(String topic, UUID eventId, String payload) {
+        log.info("Sending file update event to topic {} with id {}", topic, eventId);
         kafkaTemplate.send(
                         topic,
-                        fileId.toString(),
+                        eventId.toString(),
                         payload);
     }
-    public void sendFileFailedEvent(String topic, UUID fileId, String payload) {
+    public void sendFileFailedEvent(String topic, UUID eventId, String payload) {
         kafkaTemplate.send(
                 topic,
-                fileId.toString(),
+                eventId.toString(),
                 payload);
     }
 
-    public void sendFileDltEvent(String topic, UUID fileId, String payload) {
+    public void sendFileDltEvent(String topic, UUID eventId, String payload) {
         kafkaTemplate.send(
                 topic,
-                fileId.toString(),
+                eventId.toString(),
                 payload);
     }
 }

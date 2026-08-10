@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 @Transactional
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class FileProcessingService {
     private final ObjectMapper objectMapper;
 
     public void process(FileUploadEventDto event) {
+        UUID eventId = UUID.randomUUID();
         try (InputStream file = minioService.getFile(event.getKeyFile())) {
             byte[] bytes = file.readAllBytes();
             log.info(
@@ -36,7 +38,10 @@ public class FileProcessingService {
                     bytes.length
             );
             String convertedFileId = fileConversionService.generateFullNameFile(bytes, event.getKeyFile());
-            FileUpdateEventDto update = new FileUpdateEventDto(event.getFileId(), event.getKeyFile());
+            FileUpdateEventDto update = new FileUpdateEventDto(
+                    eventId,
+                    event.getFileId().toString(),
+                    event.getKeyFile());
 
             ConversionResultDto conversion = conversionDispatcher.conversionFileInDto(bytes, convertedFileId);
 
@@ -45,7 +50,7 @@ public class FileProcessingService {
             String payload = objectMapper.writeValueAsString(update);
             OutboxTable completedEvent = new OutboxTable(
                     null,
-                    update.getFileId(),
+                    event.getFileId(),
                     payload,
                     null,
                     0,

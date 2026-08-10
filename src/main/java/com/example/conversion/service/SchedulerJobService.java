@@ -25,12 +25,11 @@ public class SchedulerJobService {
     @SchedulerLock(
             name = "publishOutboxEvents",
             lockAtLeastFor = "PT1M",
-            lockAtMostFor = "PT10M")
+            lockAtMostFor = "PT5M")
     public void publishOutboxEvents() {
         List<OutboxTable> nextEvent = outboxManager.eventOutboxToList();
         if (nextEvent.isEmpty()) {
-            log.info("No events " +
-                    "to update");
+            log.info("No events to update");
             return;
         }
         for (OutboxTable outboxTable : nextEvent) {

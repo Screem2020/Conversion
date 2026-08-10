@@ -32,14 +32,17 @@
         <schedlock-spring.version>6.10.0</schedlock-spring.version>
         <schedlock-jdbc.version>6.10.0</schedlock-jdbc.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-	</properties>
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
+        <squareup-okhttp3.version>4.12.0</squareup-okhttp3.version>
+
+    </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>2025.1.2</version> <!-- Версия из линейки Oakwood с поддержкой Boot 4.1.0 -->
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -123,7 +126,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
+            <version>${squareup-okhttp3.version}</version>
         </dependency>
 
         <dependency>

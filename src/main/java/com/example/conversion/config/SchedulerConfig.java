@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableSchedulerLock(defaultLockAtMostFor = "PT10M")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT5M")
 @EnableScheduling
 public class SchedulerConfig {
     @Bean
