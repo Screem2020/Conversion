@@ -7,7 +7,7 @@ scheduler:
   fixed-rate: 3s
 outbox:
   retry:
-    timeout: PT5M
+    timeout: PT1M
     max-attempts: 300
 server:
   port: 8089
