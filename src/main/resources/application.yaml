@@ -1,3 +1,57 @@
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: flow-manager
+scheduler:
+  fixed-rate: 3s
+outbox:
+  retry:
+    timeout: PT1M
+    max-attempts: 300
+server:
+  port: 8089
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
 spring:
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
   application:
-    name: conversion
+    name: conversion-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: POSTGRES
+    password: 12345
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  kafka:
+    topics:
+      file-update: file-update-topic
+      file-upload: file-upload-topic
+      file-failed: file-failed-topic
+      file-dlt: file-update-dlt-topic
+
+    bootstrap-servers: localhost:29092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: conversion-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.example.conversion.model.dto.FileUploadEventDto

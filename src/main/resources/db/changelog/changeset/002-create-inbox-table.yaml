@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-table
+      author: misha
+
+      changes:
+        - createTable:
+            tableName: inbox
+            columns:
+              - column:
+                  name: event_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: file_id
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: key_file
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

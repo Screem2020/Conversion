@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-table
+      author: misha
+
+      changes:
+        - createTable:
+            tableName: outbox
+            columns:
+
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: outbox_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: payload
+                  type: JSONB
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: life_time
+                  type: TIMESTAMP(5)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: attempts
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
